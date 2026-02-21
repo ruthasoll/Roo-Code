@@ -41,3 +41,18 @@ User Prompt → Webview → Extension Host → Prompt Builder (SYSTEM_PROMPT) �
 - Ready for Phase 1 (Handshake + select_active_intent tool)
 
 Signed: [Your Name]
+
+## Phase 4 – Optimistic Locking & Lesson Recording
+
+- **Optimistic locking** has been incorporated into `hookEngine.preToolUse()` for write
+  operations. The hook computes a SHA‑256 hash of the current file contents and compares
+  it against an original hash stored in workspace configuration. If a parallel agent or
+  user modified the file in the meantime the hook returns a `stale_file` error, forcing
+  the agent to re‑read and retry.
+- **Lesson recording** lives in `hookEngine.postToolUse()`. Any tool result that includes
+  an error (or lint/test failure) triggers an append to `AGENT.md` with a timestamp, the
+  failing tool name, its parameters and a brief description of the problem. This forms
+  the shared “agent brain” for future analysis.
+- At the middleware boundary we now enforce scope, HITL approval, optimistic locking,
+  trace logging and lesson capture – Phase 4 completes the Hook Engine requirements.
+- Next step: begin work on parallel orchestration and final submission prep.
