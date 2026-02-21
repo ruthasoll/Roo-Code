@@ -1,0 +1,2 @@
+# Create empty file
+type nul > .orchestration/agent_trace.jsonl

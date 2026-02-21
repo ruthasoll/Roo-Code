@@ -1,0 +1,40 @@
+# .orchestration/active_intents.yaml
+
+active_intents:
+  - id: "INT-001"
+    name: "JWT Authentication Migration"
+    status: "IN_PROGRESS"                  # PLANNED | IN_PROGRESS | REVIEW | DONE | BLOCKED
+    description: "Replace Basic Auth with JWT across all API endpoints while preserving backward compatibility."
+    owned_scope:                           # Critical for scope enforcement in hooks
+      - "src/auth/**"
+      - "src/middleware/jwt.ts"
+      - "tests/auth/**"
+    constraints:                           # Injected into prompt / validated by hooks
+      - "Must not use external auth providers (no Auth0, Firebase, etc.)"
+      - "Must maintain backward compatibility with Basic Auth clients for 6 months"
+      - "No breaking changes to existing public API contracts"
+    acceptance_criteria:                   # Used for auto-verification loops
+      - "All unit tests in tests/auth/ pass with 100% coverage for auth flows"
+      - "Integration tests for login/refresh/protected routes succeed"
+      - "Security scan (npm audit) shows no high/critical issues"
+    priority: "high"
+    created_at: "2026-02-21T15:00:00Z"
+    updated_at: "2026-02-21T15:00:00Z"
+
+  - id: "INT-002"
+    name: "Add Weather API Endpoint"
+    status: "PLANNED"
+    description: "Implement GET /weather endpoint with city param and OpenWeatherMap integration."
+    owned_scope:
+      - "src/api/weather.ts"
+      - "tests/api/weather.test.ts"
+    constraints:
+      - "Use OpenWeatherMap API key from env"
+      - "Rate limit to 100 req/hour per IP"
+      - "Return JSON only"
+    acceptance_criteria:
+      - "Endpoint returns 200 with temp/humidity for valid city"
+      - "Handles 404 for invalid city"
+      - "Includes caching (in-memory or Redis)"
+    priority: "medium"
+    created_at: "2026-02-21T16:00:00Z"
